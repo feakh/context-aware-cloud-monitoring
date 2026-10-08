@@ -1,0 +1,7 @@
+{
+  "cpu_high": 85,
+  "memory_high": 85,
+  "disk_high": 90,
+  "response_slow_ms": 1000,
+  "errors_repeated": 3
+}

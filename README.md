@@ -1,66 +1,76 @@
-# Context-Aware Cloud Infrastructure Monitoring
+# Context Aware Cloud Monitoring
 
-A context-aware cloud infrastructure monitoring prototype for automated incident detection and prioritization.
+Initial Python prototype for Fechukwu Akhmedzhanov's MSIT capstone.
 
-## Project Overview
+**Start with `docs/START_HERE.md`, then rehearse using `docs/RECORDING_SCRIPT.md`.**
 
-Cloud infrastructure continuously generates operational metrics, logs, and system events that administrators use to assess system health. Examining these indicators independently can make it difficult to distinguish isolated abnormalities from conditions that collectively indicate a meaningful incident.
+This version runs locally with Python 3.10 or newer and no third-party packages.
+It provides administrator login, synthetic telemetry validation, transparent
+contextual classification, SQLite storage, a browser dashboard, priority filtering,
+and CSV reporting. It does not collect live cloud data or perform remediation.
 
-This project develops a bounded prototype that evaluates related infrastructure indicators together using transparent contextual rules. The system detects predefined incident conditions, assigns priority levels, and presents the contributing conditions to an administrator for review.
+## Quick start
 
-## Monitored Indicators
+From this folder, run `python3 app.py` on Mac/Linux or `py app.py` on Windows.
+The browser opens automatically. Username: `admin`. Copy the temporary password
+printed in the terminal. It changes when the application restarts.
 
-The prototype focuses on selected operational indicators:
+## Structure
 
-- CPU utilization
-- Memory utilization
-- Disk usage
-- Service availability and response time
-- Selected application and system events
+| File | Responsibility |
+| --- | --- |
+| `app.py` | Local HTTP routes, administrator session, orchestration |
+| `src/telemetry.py` | Synthetic observations, validation, field minimization |
+| `src/rules.py` | Contextual conditions, detection, classification, evidence |
+| `src/service.py` | Connect validation, rules, and storage |
+| `src/storage.py` | SQLite persistence |
+| `src/dashboard.html` | Login, scenario controls, results, filtering, export |
+| `config/rules.json` | Prototype thresholds |
+| `tests/test_monitoring.py` | Rule, persistence, and HTTP integration tests |
 
-## System Architecture
+Run tests: `python3 -m unittest discover -s tests -v` (Windows: replace `python3` with `py`).
 
-The prototype follows a modular processing pipeline:
+## Scope and limitations
 
-1. Telemetry Collection and Validation
-2. Contextual Rule Processing
-3. Incident Detection
-4. Priority Classification
-5. Incident Data Storage
-6. Dashboard and Reporting
-7. Administrator Review
+- Generated data only. Five monitored categories: CPU, memory, disk, service
+  availability/response time, and application error events represented by a count.
+- Rules classify each observation. No historical time-window correlation or
+  sustained-condition detection is implemented yet.
+- Thresholds are illustrative choices, not production SLAs or validated findings.
+- SQLite retains saved observations; UI and CSV show the most recent 200.
+- Single administrator role, 30-minute sessions, process-local session storage.
+- Password is generated at startup or supplied through `CAPSTONE_PASSWORD`.
+  No password is stored in source or SQLite. Keep the terminal password out of
+  the published recording when possible.
+- Local loopback HTTP only. No TLS, account provisioning, login rate limiting,
+  production deployment, or automated remediation. Do not expose this server
+  on a public network.
+- Tests demonstrate specific cases. No measured detection rate, false-positive
+  rate, latency benchmark, or accuracy claim is made.
+- No CI/CD workflow is included or claimed as operational. It remains proposed
+  work in the Unit 4 reflection.
 
-The system supports administrator decision-making and does not perform autonomous remediation.
+## Relationship to the written reflection
 
-## Repository Structure
+The reflection describes proposed CI/CD practices. This package implements the
+initial application, not that pipeline. Its current tests use Python's built-in
+`unittest`; pytest remains an optional future tool. The initial application now
+goes beyond design/repository preparation. Before submitting the reflection,
+replace its final status sentence with:
 
-- `src/` - Prototype source modules
-  - `telemetry/` - Telemetry collection and validation
-  - `rules/` - Contextual rule processing
-  - `incidents/` - Incident detection and prioritization
-  - `dashboard/` - Administrator dashboard and reporting
-- `tests/` - Controlled test scenarios and evaluation resources
-- `docs/` - Requirements, scope, and project documentation
-- `design/` - System architecture and design documentation
-- `config/` - Prototype configuration resources
+> These CI/CD practices are proposed; the initial prototype now supports synthetic telemetry processing and incident reporting, while the automated pipeline remains to be implemented.
 
-## Evaluation
+Review, run, and understand the code before presenting it. Follow the course's
+requirements for acknowledging assistance. Do not describe features as your
+completed implementation until you have run and verified them.
 
-The prototype will be evaluated using controlled normal and incident scenarios. Primary evaluation measures include:
+## Technical documentation
 
-- Detection rate
-- False-positive rate
-- Detection latency
-- Priority-classification accuracy
+Python Software Foundation. (n.d.). *venv—Creation of virtual environments*.
+https://docs.python.org/3/library/venv.html
 
-## Project Scope
+Python Software Foundation. (n.d.). *http.server—HTTP servers*.
+https://docs.python.org/3/library/http.server.html
 
-The project is intentionally limited to a controlled virtualized, containerized, or simulated cloud-like environment. Enterprise-scale deployment, autonomous remediation, production customer data, comprehensive multi-cloud support, machine-learning model training, and exhaustive monitoring of all possible infrastructure metrics are outside the current scope.
-
-## Development Workflow
-
-Development work is performed on the `development` branch. Stable and reviewed changes are integrated into the `main` branch through the repository's version-control workflow. Descriptive commits are used to maintain traceability between requirements, design decisions, testing resources, and implementation progress.
-
-## Current Status
-
-The project is currently in the requirements and architecture phase. Initial requirements, project scope, system architecture, source-module structure, and controlled test-scenario definitions have been established.
+Python Software Foundation. (n.d.). *sqlite3—DB-API 2.0 interface for SQLite databases*.
+https://docs.python.org/3/library/sqlite3.html
